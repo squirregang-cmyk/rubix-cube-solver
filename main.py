@@ -1,5 +1,6 @@
 import random
-from pySide6 import QtCore, QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets, QtGui
+import sys
 import cube_functions
 
 #tests to see if cycles work on specific slots   
@@ -14,7 +15,6 @@ for n in range(4):
     n = n+1
 """
 
-
 move_notation = {
     cube_functions.move_U : "U", cube_functions.move_U_prime : "U'",
     cube_functions.move_D : "D", cube_functions.move_D_prime : "D'",
@@ -22,14 +22,11 @@ move_notation = {
     cube_functions.move_L : "L", cube_functions.move_L_prime : "L'",
     cube_functions.move_F : "F", cube_functions.move_F_prime : "F'",
     cube_functions.move_B : "B", cube_functions.move_B_prime : "B'",
-    }
-
+}
 All_moves = list(move_notation.keys())
 
 #flips the key and values around from the first dictionary, so that the list from the scramble can be turned into usable moves
 string_to_move = { string: func for func, string in move_notation.items() }
-
-scramble_length = int(input("enter a numer"))
 scramble_list = []
 
 def generate_random_moves(scramble_length):
@@ -44,9 +41,6 @@ def generate_random_moves(scramble_length):
     
     return scramble_list
 
-generate_random_moves(scramble_length)
-print(scramble_list)
-
 def apply_moves_to_cube(scramble_list):
 
     for move_letter in scramble_list:
@@ -54,9 +48,38 @@ def apply_moves_to_cube(scramble_list):
 
         actual_move_function()
 
+class MyWidget(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
 
+        self.button = QtWidgets.QPushButton("Click me!")
+        self.text = QtWidgets.QLabel("Hello World",alignment=QtCore.Qt.AlignCenter)
 
-apply_moves_to_cube(scramble_list)
+        self.layout = QtWidgets.QVBoxLayout(self)
+        self.layout.addWidget(self.text)
+        self.layout.addWidget(self.button)
 
-print(cube.corners["URF"])
-print(cube.edges["UF"])
+        self.button.clicked.connect(self.magic)
+
+    @QtCore.Slot()
+    def magic(self):
+        #self.text.setText(random.choice(self.hello))
+
+        #scramble_length = int(input("enter a numer"))
+        scramble_length = random.randint(1, 35)
+
+        generate_random_moves(scramble_length)
+        print(scramble_list)
+        apply_moves_to_cube(scramble_list)
+
+        print(cube.corners["URF"])
+        print(cube.edges["UF"])
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication([])
+
+    widget = MyWidget()
+    widget.resize(800, 600)
+    widget.show()
+
+    sys.exit(app.exec())
