@@ -17,9 +17,12 @@ class Edge:
         return f"Edge(identity={self.identity}, orientation={self.orientation})"
 
 
-class centre:
+class Centre:
     def __init__(self, identity):
         self.identity = identity
+
+    def __repr__(self):
+        return(f"Centre(identity={self.identity})")
     
         
 
@@ -57,13 +60,33 @@ class Cube:
         }
 
         self.centres = {
-            "U" : centre("W"),
-            "F" : centre("G"),
-            "R" : centre("R"),
-            "L" : centre("O"),
-            "B" : centre("B"),
-            "D" : centre("Y")
+            "U" : Centre("W"),
+            "F" : Centre("G"),
+            "R" : Centre("R"),
+            "L" : Centre("O"),
+            "B" : Centre("B"),
+            "D" : Centre("Y")
         }
+
+    def __repr__(self):
+        corners = "\n".join(
+            f"  {slot}: {piece}" for slot, piece in self.corners.items()
+        )
+        edges = "\n".join(
+            f"  {slot}: {piece}" for slot, piece in self.edges.items()
+        )
+        centres = "\n".join(
+            f"  {slot}: {piece}" for slot, piece in self.centres.items()
+        )
+        return (
+            "Corners:\n"
+            f"{corners}\n\n"
+            "Edges:\n"
+            f"{edges}\n\n"
+            "Centres:\n"
+            f"{centres}"
+        )
+        
         
 
 cube = Cube()
@@ -226,7 +249,7 @@ def edge_cycle_D_prime():
 
 
 def edge_cycle_R():
-    edge_cycle_no_tiwst("FR", "DR", "BR", "UR")
+    edge_cycle_no_twist("FR", "DR", "BR", "UR")
 
 
 

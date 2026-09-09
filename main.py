@@ -65,15 +65,16 @@ class MyWidget(QtWidgets.QWidget):
     def magic(self):
         #self.text.setText(random.choice(self.hello))
 
-        #scramble_length = int(input("enter a numer"))
-        scramble_length = random.randint(1, 35)
+        scramble_length = int(input("enter a numer"))
+        #scramble_length = random.randint(1, 35)
 
         generate_random_moves(scramble_length)
         print(scramble_list)
         apply_moves_to_cube(scramble_list)
 
-        print(cube.corners["URF"])
-        print(cube.edges["UF"])
+        print(cube_functions.cube)
+        #print(cube.corners["URF"])
+        #print(cube.edges["UF"])
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
