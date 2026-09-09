@@ -164,6 +164,101 @@ def corner_cylce_B_prime():
     corner_cycle_twist_counter_clockwise("URB", "ULB", "DLB", "DRB")
 
 
+def edge_cycle_no_twist(edge1, edge2, edge3, edge4):
+    edges = cube.edges
+    temporary_edge = edges[edge1]
+    edges[edge1] = edges[edge2]
+    edges[edge2] = edges[edge3]
+    edges[edge3] = edges[edge4]
+    edges[edge4] = temporary_edge
+
+def edge_cycle_twist_clockwise(edge1, edge2, edge3, edge4):
+    edges = cube.edges
+    temporary_edge = edges[edge1]
+    edges[edge1] = edges[edge2]
+    edges[edge2] = edges[edge3]
+    edges[edge3] = edges[edge4]
+    edges[edge4] = temporary_edge
+
+    edges[edge1].orientation = (edges[edge1].orientation + 1) %2
+    edges[edge2].orientation = (edges[edge2].orientation + 0) %2
+    edges[edge3].orientation = (edges[edge3].orientation + 1) %2
+    edges[edge4].orientation = (edges[edge4].orientation + 0) %2
+
+def edge_cycle_twist_counter_clockwise(edge1, edge2, edge3, edge4):
+    edges = cube.edges
+    temporary_edge = edges[edge1]
+    edges[edge1] = edges[edge2]
+    edges[edge2] = edges[edge3]
+    edges[edge3] = edges[edge4]
+    edges[edge4] = temporary_edge
+
+    edges[edge1].orientation = (edges[edge1].orientation + 0) %2
+    edges[edge2].orientation = (edges[edge2].orientation + 1) %2
+    edges[edge3].orientation = (edges[edge3].orientation + 0) %2
+    edges[edge4].orientation = (edges[edge4].orientation + 1) %2
+
+
+def edge_cycle_U():
+    edge_cycle_no_twist("UF", "UR", "UB", "UL")
+
+
+
+def edge_cycle_U_prime():
+    edge_cycle_no_twist("UF", "UL", "UB", "UR")
+
+
+
+def edge_cycle_D():
+    edge_cycle_no_twist("DF", "DR", "DB", "DL")
+
+
+
+def edge_cycle_D_prime():
+    edge_cycle_no_twist("DF", "DL", "DB", "DR")
+
+
+
+def edge_cycle_R():
+    edge_cycle_no_tiwst("FR", "DR", "BR", "UR")
+
+
+
+def edge_cycle_R_prime():
+    edge_cycle_no_twist("FR", "UR", "BR", "DR")
+
+
+
+def edge_cycle_L():
+    edge_cycle_no_twist("FL", "UL", "BL", "DL")
+
+
+
+def edge_cycle_L_prime():
+    edge_cycle_no_twist("FL", "DL", "BL", "UL")
+
+
+
+def edge_cycle_F():
+    edge_cycle_twist_clockwise("UF", "FR", "DF", "FL")
+
+
+
+def edge_cycle_F_prime():
+    edge_cycle_twist_counter_clockwise("UF", "FL", "DF", "FR")
+
+
+
+def edge_cylce_B():
+    edge_cycle_twist_clockwise("UB", "BL", "DB", "BR")
+
+
+
+def edge_cylce_B_prime():
+    edge_cycle_twist_counter_clockwise("UB", "BR", "DB", "BL")
+
+
+
 #tests to see if cycles work on specific slots   
              
 for n in range(4): 
@@ -171,4 +266,7 @@ for n in range(4):
     print(cube.corners["URF"])
     n = n+1
 
-    
+for n in range(4): 
+    edge_cycle_U()
+    print(cube.edges["UF"])
+    n = n+1 
