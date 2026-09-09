@@ -1,272 +1,62 @@
-class Corner:
-    def __init__(self, identity, orientation = 0):
-        self.identity = identity
-        self.orientation = orientation
-
-    def __repr__(self):
-        return f"Corner(identity={self.identity}, orientation={self.orientation})"
-
-
-
-class Edge: 
-    def __init__(self, identity, orientation = 0):
-        self.identity = identity
-        self.orientation = orientation
-
-    def __repr__(self):
-        return f"Edge(identity={self.identity}, orientation={self.orientation})"
-
-
-class centre:
-    def __init__(self, identity):
-        self.identity = identity
-    
-        
-
-class Cube:
-    def __init__(self):
-
-        self.corners = {
-            "URF": Corner("WRG"),
-            "ULF": Corner("WOG"),
-            "DRF": Corner("YRG"),
-            "DLF": Corner("YOG"),
-
-            "URB": Corner("WRB"),
-            "ULB": Corner("WOB"),
-            "DRB": Corner("YRB"),
-            "DLB": Corner("YOB")
-        }
-
-        # Edge slots
-        self.edges = {
-            "UF": Edge("WG"),
-            "UL": Edge("WO"),
-            "UB": Edge("WB"),
-            "UR": Edge("WR"),
-
-            "DF": Edge("YG"),
-            "DL": Edge("YO"),
-            "DB": Edge("YB"),
-            "DR": Edge("YR"),
-
-            "FR": Edge("GR"),
-            "FL": Edge("GO"),
-            "BL": Edge("BO"),
-            "BR": Edge("BR")
-        }
-
-        self.centres = {
-            "U" : centre("W"),
-            "F" : centre("G"),
-            "R" : centre("R"),
-            "L" : centre("O"),
-            "B" : centre("B"),
-            "D" : centre("Y")
-        }
-        
-
-cube = Cube()
-
-# Define a function to cycle the corners on the R face
-
-def corner_cycle_no_twist(corner1, corner2, corner3, corner4):
-    corners = cube.corners
-    temporary_corner = corners[corner1]
-    corners[corner1] = corners[corner2]
-    corners[corner2] = corners[corner3]
-    corners[corner3] = corners[corner4]
-    corners[corner4] = temporary_corner
-
-def corner_cycle_twist_clockwise(corner1, corner2, corner3, corner4):
-    corners = cube.corners
-    temporary_corner = corners[corner1]
-    corners[corner1] = corners[corner2]
-    corners[corner2] = corners[corner3]
-    corners[corner3] = corners[corner4]
-    corners[corner4] = temporary_corner
-
-    corners[corner1].orientation = (corners[corner1].orientation +1) % 3
-    corners[corner2].orientation = (corners[corner2].orientation +2) % 3
-    corners[corner3].orientation = (corners[corner3].orientation +1) % 3
-    corners[corner4].orientation = (corners[corner4].orientation +2) % 3
-
-def corner_cycle_twist_counter_clockwise(corner1, corner2, corner3, corner4):
-    corners = cube.corners
-    temporary_corner = corners[corner1]
-    corners[corner1] = corners[corner2]
-    corners[corner2] = corners[corner3]
-    corners[corner3] = corners[corner4]
-    corners[corner4] = temporary_corner
-
-    corners[corner1].orientation = (corners[corner1].orientation +2) % 3
-    corners[corner2].orientation = (corners[corner2].orientation +1) % 3
-    corners[corner3].orientation = (corners[corner3].orientation +2) % 3
-    corners[corner4].orientation = (corners[corner4].orientation +1) % 3
-
-
-def corner_cycle_U():
-    corner_cycle_no_twist("URF", "URB", "ULB", "ULF")
-
-
-
-def corner_cycle_U_prime():
-    corner_cycle_no_twist("URF", "ULF", "ULB", "URB")
-
-
-
-def corner_cycle_D():
-    corner_cycle_no_twist("DRF", "DRB", "DLB", "DLF")
-
-
-
-def corner_cycle_D_prime():
-    corner_cycle_no_twist("DRF", "DLF", "DLB", "DRB")
-
-
-
-def corner_cycle_R():
-    corner_cycle_twist_clockwise("URF", "DRF", "DRB", "URB")
-
-
-
-def corner_cycle_R_prime():
-    corner_cycle_twist_counter_clockwise("URF", "URB", "DRB", "DRF")
-
-
-
-def corner_cycle_L():
-    corner_cycle_twist_clockwise("ULF", "ULB", "DLB", "DLF")
-
-
-
-def corner_cycle_L_prime():
-    corner_cycle_twist_counter_clockwise("ULF", "DLF", "DLB", "ULB")
-
-
-
-def corner_cycle_F():
-    corner_cycle_twist_clockwise("URF", "ULF", "DLF", "DRF")
-
-
-
-def corner_cycle_F_prime():
-    corner_cycle_twist_counter_clockwise("URF", "DRF", "DLF", "ULF")
-
-
-
-def corner_cylce_B():
-    corner_cycle_twist_clockwise("URB", "DRB", "DLB", "ULB")
-
-
-
-def corner_cylce_B_prime():
-    corner_cycle_twist_counter_clockwise("URB", "ULB", "DLB", "DRB")
-
-
-def edge_cycle_no_twist(edge1, edge2, edge3, edge4):
-    edges = cube.edges
-    temporary_edge = edges[edge1]
-    edges[edge1] = edges[edge2]
-    edges[edge2] = edges[edge3]
-    edges[edge3] = edges[edge4]
-    edges[edge4] = temporary_edge
-
-def edge_cycle_twist_clockwise(edge1, edge2, edge3, edge4):
-    edges = cube.edges
-    temporary_edge = edges[edge1]
-    edges[edge1] = edges[edge2]
-    edges[edge2] = edges[edge3]
-    edges[edge3] = edges[edge4]
-    edges[edge4] = temporary_edge
-
-    edges[edge1].orientation = (edges[edge1].orientation + 1) %2
-    edges[edge2].orientation = (edges[edge2].orientation + 0) %2
-    edges[edge3].orientation = (edges[edge3].orientation + 1) %2
-    edges[edge4].orientation = (edges[edge4].orientation + 0) %2
-
-def edge_cycle_twist_counter_clockwise(edge1, edge2, edge3, edge4):
-    edges = cube.edges
-    temporary_edge = edges[edge1]
-    edges[edge1] = edges[edge2]
-    edges[edge2] = edges[edge3]
-    edges[edge3] = edges[edge4]
-    edges[edge4] = temporary_edge
-
-    edges[edge1].orientation = (edges[edge1].orientation + 0) %2
-    edges[edge2].orientation = (edges[edge2].orientation + 1) %2
-    edges[edge3].orientation = (edges[edge3].orientation + 0) %2
-    edges[edge4].orientation = (edges[edge4].orientation + 1) %2
-
-
-def edge_cycle_U():
-    edge_cycle_no_twist("UF", "UR", "UB", "UL")
-
-
-
-def edge_cycle_U_prime():
-    edge_cycle_no_twist("UF", "UL", "UB", "UR")
-
-
-
-def edge_cycle_D():
-    edge_cycle_no_twist("DF", "DR", "DB", "DL")
-
-
-
-def edge_cycle_D_prime():
-    edge_cycle_no_twist("DF", "DL", "DB", "DR")
-
-
-
-def edge_cycle_R():
-    edge_cycle_no_tiwst("FR", "DR", "BR", "UR")
-
-
-
-def edge_cycle_R_prime():
-    edge_cycle_no_twist("FR", "UR", "BR", "DR")
-
-
-
-def edge_cycle_L():
-    edge_cycle_no_twist("FL", "UL", "BL", "DL")
-
-
-
-def edge_cycle_L_prime():
-    edge_cycle_no_twist("FL", "DL", "BL", "UL")
-
-
-
-def edge_cycle_F():
-    edge_cycle_twist_clockwise("UF", "FR", "DF", "FL")
-
-
-
-def edge_cycle_F_prime():
-    edge_cycle_twist_counter_clockwise("UF", "FL", "DF", "FR")
-
-
-
-def edge_cylce_B():
-    edge_cycle_twist_clockwise("UB", "BL", "DB", "BR")
-
-
-
-def edge_cylce_B_prime():
-    edge_cycle_twist_counter_clockwise("UB", "BR", "DB", "BL")
-
-
+import random
+from pySide6 import QtCore, QtCore, QtWidgets, QtGui
+import cube_functions
 
 #tests to see if cycles work on specific slots   
-             
-for n in range(4): 
-    corner_cycle_U()
-    print(cube.corners["URF"])
-    n = n+1
 
+cube = cube_functions.cube 
+
+"""
 for n in range(4): 
-    edge_cycle_U()
+    cube_functions.move_U()
+    print(cube.corners["URF"])
     print(cube.edges["UF"])
-    n = n+1 
+    n = n+1
+"""
+
+
+move_notation = {
+    cube_functions.move_U : "U", cube_functions.move_U_prime : "U'",
+    cube_functions.move_D : "D", cube_functions.move_D_prime : "D'",
+    cube_functions.move_R : "R", cube_functions.move_R_prime : "R'",
+    cube_functions.move_L : "L", cube_functions.move_L_prime : "L'",
+    cube_functions.move_F : "F", cube_functions.move_F_prime : "F'",
+    cube_functions.move_B : "B", cube_functions.move_B_prime : "B'",
+    }
+
+All_moves = list(move_notation.keys())
+
+#flips the key and values around from the first dictionary, so that the list from the scramble can be turned into usable moves
+string_to_move = { string: func for func, string in move_notation.items() }
+
+scramble_length = int(input("enter a numer"))
+scramble_list = []
+
+def generate_random_moves(scramble_length):
+
+    for i in range(scramble_length):
+        chosen_move = random.choice(All_moves)
+
+
+        clean_name = move_notation[chosen_move]
+        scramble_list.append(clean_name)
+    print(f"Scramble: {' '.join(scramble_list)}")
+    
+    return scramble_list
+
+generate_random_moves(scramble_length)
+print(scramble_list)
+
+def apply_moves_to_cube(scramble_list):
+
+    for move_letter in scramble_list:
+        actual_move_function = string_to_move[move_letter]
+
+        actual_move_function()
+
+
+
+apply_moves_to_cube(scramble_list)
+
+print(cube.corners["URF"])
+print(cube.edges["UF"])
