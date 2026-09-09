@@ -30,6 +30,7 @@ string_to_move = { string: func for func, string in move_notation.items() }
 scramble_list = []
 
 def generate_random_moves(scramble_length):
+    scramble_list.clear()
 
     for i in range(scramble_length):
         chosen_move = random.choice(All_moves)
@@ -52,29 +53,51 @@ class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        self.button = QtWidgets.QPushButton("Click me!")
-        self.text = QtWidgets.QLabel("Hello World",alignment=QtCore.Qt.AlignCenter)
+        self.scramble_title = QtWidgets.QLabel("Scramble", )
+        self.scramble_text = QtWidgets.QLabel(f"{' '.join(scramble_list)}")
+        self.scramble_button = QtWidgets.QPushButton("Scramble")
+        self.reset_button = QtWidgets.QPushButton("Reset")
+
 
         self.layout = QtWidgets.QVBoxLayout(self)
-        self.layout.addWidget(self.text)
-        self.layout.addWidget(self.button)
+        self.layout.addWidget(self.scramble_title, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignHCenter)
+        self.layout.addWidget(self.scramble_text, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignHCenter)
 
-        self.button.clicked.connect(self.magic)
+        self.layout.addStretch()
+        
+        button_layout = QtWidgets.QHBoxLayout()
+        button_layout.addWidget(self.scramble_button)
+        button_layout.addWidget(self.reset_button)
+
+        self.layout.addLayout(button_layout)
+        
+        
+
+        self.scramble_button.clicked.connect(self.magic)
+        self.reset_button.clicked.connect(self.reset_scramble_and_cube)
 
     @QtCore.Slot()
+
+    def reset_scramble_and_cube(self):
+        cube_functions.reset()
+        print(cube_functions.cube)
+        self.scramble_text.setText("")
+        
+
     def magic(self):
         #self.text.setText(random.choice(self.hello))
 
-        scramble_length = int(input("enter a numer"))
+        scramble_length = random.randint(20, 25) #int(input("enter a numer: "))
         #scramble_length = random.randint(1, 35)
 
         generate_random_moves(scramble_length)
-        print(scramble_list)
         apply_moves_to_cube(scramble_list)
 
         print(cube_functions.cube)
         #print(cube.corners["URF"])
         #print(cube.edges["UF"])
+        self.scramble_text.setText(f"{' '.join(scramble_list)}")
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])

@@ -1,3 +1,5 @@
+import copy
+
 class Corner:
     def __init__(self, identity, orientation = 0):
         self.identity = identity
@@ -90,6 +92,12 @@ class Cube:
         
 
 cube = Cube()
+solved_cube = copy.deepcopy(cube)
+
+def reset():
+    global cube
+    cube = copy.deepcopy(solved_cube)
+
 
 # Define a function to cycle the corners on the R face
 
