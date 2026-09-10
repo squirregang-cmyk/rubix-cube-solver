@@ -49,6 +49,220 @@ def apply_moves_to_cube(scramble_list):
 
         actual_move_function()
 
+
+#need to make dicitonary to map old 3d peices into their respective stickers/sides
+
+
+corner_stickers = {
+    "URF": ["U9", "R1", "F3"],
+    "ULF": ["U7", "L3", "F1"],
+    "URB": ["U3", "R3", "B1"],
+    "ULB": ["U1", "L1", "B3"],
+
+    "DRF": ["D3", "R7", "F9"],
+    "DLF": ["D1", "L9", "F7"],
+    "DRB": ["D9", "R9", "B7"],
+    "DLB": ["D7", "L7", "B9"],
+}
+
+edge_stickers = {
+    "UF": ["U8", "F2"],
+    "UR": ["U6", "R2"],
+    "UB": ["U2", "B2"],
+    "UL": ["U4", "L2"],
+
+    "DF": ["D2", "F8"],
+    "DR": ["D6", "R8"],
+    "DB": ["D8", "B8"],
+    "DL": ["D4", "L8"],
+
+    "FR": ["F6", "R4"],
+    "FL": ["F4", "L6"],
+    "BR": ["B6", "R6"],
+    "BL": ["B4", "L4"],
+}
+
+centre_stickers = {
+    "U": ["U5"],
+    "F": ["F5"],
+    "R": ["R5"],
+    "L": ["L5"],
+    "B": ["B5"],
+    "D": ["D5"],
+}
+
+stickers = {
+    # U face
+    "U1": "W",
+    "U2": "W",
+    "U3": "W",
+    "U4": "W",
+    "U5": "W",
+    "U6": "W",
+    "U7": "W",
+    "U8": "W",
+    "U9": "W",
+
+    # F face
+    "F1": "G",
+    "F2": "G",
+    "F3": "G",
+    "F4": "G",
+    "F5": "G",
+    "F6": "G",
+    "F7": "G",
+    "F8": "G",
+    "F9": "G",
+
+    # R face
+    "R1": "R",
+    "R2": "R",
+    "R3": "R",
+    "R4": "R",
+    "R5": "R",
+    "R6": "R",
+    "R7": "R",
+    "R8": "R",
+    "R9": "R",
+
+    # L face
+    "L1": "O",
+    "L2": "O",
+    "L3": "O",
+    "L4": "O",
+    "L5": "O",
+    "L6": "O",
+    "L7": "O",
+    "L8": "O",
+    "L9": "O",
+
+    # B face
+    "B1": "B",
+    "B2": "B",
+    "B3": "B",
+    "B4": "B",
+    "B5": "B",
+    "B6": "B",
+    "B7": "B",
+    "B8": "B",
+    "B9": "B",
+
+    # D face
+    "D1": "Y",
+    "D2": "Y",
+    "D3": "Y",
+    "D4": "Y",
+    "D5": "Y",
+    "D6": "Y",
+    "D7": "Y",
+    "D8": "Y",
+    "D9": "Y",
+}
+
+
+def colour_assignment(peice_for_assignment):
+
+    #checks the dictionary 
+    if piece_for_assignment in corner_stickers:
+
+        corner = cube.corners[peice_for_assignment]
+
+        orientation = corner.orientation
+
+        colour1, colour2, colour3 = corner.identity
+
+        if orientation == 1:
+            colour1, colour2, colour3 = colour2, colour3, colour1
+
+        elif orientation == 2:
+            colour1, colour2, colour3 = colour3, colour1, colour2
+
+        positions = corner_stickers[peice_for_assignment]
+
+        stickers[positions[0]] = colour1
+        stickers[positions[1]] = colour2
+        stickers[positions[2]] = colour3
+    
+    #checks dicitonary
+    elif piece_for_assignment in edge_stickers:
+
+        edge = cube.edges[peice_for_assignment]
+
+        orientation = edge.orientation
+
+        colour1, colour2 = edge.identity
+
+        if orientation == 1:
+            colour1, colour2 = colour2, colour1
+
+        positions = edge_stickers[peice_for_assignment]
+        
+        stickers[positions[0]] = colour1
+        stickers[positions[1]] = colour2
+
+    else:
+
+        centre = cube.centres[peice_for_assignment]
+
+        colour1 = centre.identity
+
+        positions = centre_stickers[peice_for_assignment]
+
+        stickers[positions[0]] = colour1
+
+
+#goes through all positions of stickers on cube and checks what value is held in the dictionary and then uses that to assign the colour
+def update_sticker(stikecer_key, square):
+
+    colour = stickers[sticker_key]
+
+    if colour == "W":
+        square.setStyleSheet("background-color: white;")
+
+    elif colour == "Y":
+        square.setStyleSheet("background-color: yellow;")
+
+    elif colour == "R":
+        square.setStyleSheet("background-color: red;")
+
+    elif colour == "O":
+        square.setStyleSheet("background-color: orange;")
+
+    elif colour == "G":
+        square.setStyleSheet("background-color: green;")
+
+    elif colour == "B":
+        square.setStyleSheet("background-color: blue;")
+
+
+#will work on cube net later, dont understand and ai confused me with it
+"""
+class CubeNet(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        layout = QtWidgets.QGridLayout(self)
+
+        # Create the 54 squares
+        self.stickers = {}
+
+        faces = ["U", "L", "F", "R", "B", "D"]
+
+        for face in faces:
+            for number in range(1, 10):
+                key = f"{face}{number}"
+
+                square = QtWidgets.QLabel()
+                square.setFixedSize(50, 50)
+                square.setStyleSheet(
+                    "background-color: white; border: 1px solid black;"
+                )
+
+                self.stickers[key] = square
+"""
+
+
+
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
