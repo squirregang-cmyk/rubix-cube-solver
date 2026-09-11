@@ -5,7 +5,6 @@ import cube_functions
 
 #tests to see if cycles work on specific slots   
 
-cube = cube_functions.cube 
 
 """
 for n in range(4): 
@@ -163,9 +162,9 @@ stickers = {
 def colour_assignment(peice_for_assignment):
 
     #checks the dictionary 
-    if piece_for_assignment in corner_stickers:
+    if peice_for_assignment in corner_stickers:
 
-        corner = cube.corners[peice_for_assignment]
+        corner = cube_functions.cube.corners[peice_for_assignment]
 
         orientation = corner.orientation
 
@@ -184,9 +183,9 @@ def colour_assignment(peice_for_assignment):
         stickers[positions[2]] = colour3
     
     #checks dicitonary
-    elif piece_for_assignment in edge_stickers:
+    elif peice_for_assignment in edge_stickers:
 
-        edge = cube.edges[peice_for_assignment]
+        edge = cube_functions.cube.edges[peice_for_assignment]
 
         orientation = edge.orientation
 
@@ -202,7 +201,7 @@ def colour_assignment(peice_for_assignment):
 
     else:
 
-        centre = cube.centres[peice_for_assignment]
+        centre = cube_functions.cube.centres[peice_for_assignment]
 
         colour1 = centre.identity
 
@@ -210,9 +209,20 @@ def colour_assignment(peice_for_assignment):
 
         stickers[positions[0]] = colour1
 
+def update_all_stickers():
+
+    for position in corner_stickers:
+        colour_assignment(position)
+
+    for position in edge_stickers:
+        colour_assignment(position)
+
+    for position in centre_stickers:
+        colour_assignment(position)
+
 
 #goes through all positions of stickers on cube and checks what value is held in the dictionary and then uses that to assign the colour
-def update_sticker(stikecer_key, square):
+def update_sticker(sticker_key, square):
 
     colour = stickers[sticker_key]
 
@@ -271,24 +281,95 @@ class MyWidget(QtWidgets.QWidget):
         self.scramble_text = QtWidgets.QLabel(f"{' '.join(scramble_list)}")
         self.scramble_button = QtWidgets.QPushButton("Scramble")
         self.reset_button = QtWidgets.QPushButton("Reset")
-
-
+        
+        
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(self.scramble_title, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignHCenter)
         self.layout.addWidget(self.scramble_text, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignHCenter)
-
-        self.layout.addStretch()
         
+        
+                
         button_layout = QtWidgets.QHBoxLayout()
+        
+        
+        self.layout.addLayout(button_layout)
+                
+                
+        
+        self.scramble_button.clicked.connect(self.magic)
+        self.reset_button.clicked.connect(self.reset_scramble_and_cube)
+        
+
+        self.sticker_widgets = {}
+        cube_layout = self.create_cube_net()
+        self.layout.addLayout(cube_layout)
+
+        self.update_cube_display()
+
         button_layout.addWidget(self.scramble_button)
         button_layout.addWidget(self.reset_button)
 
-        self.layout.addLayout(button_layout)
-        
-        
+        self.layout.addStretch()
 
-        self.scramble_button.clicked.connect(self.magic)
-        self.reset_button.clicked.connect(self.reset_scramble_and_cube)
+    def update_cube_display(self):
+
+        update_all_stickers()
+
+        for sticker_key, square in self.sticker_widgets.items():
+            update_sticker(sticker_key, square)
+
+    def create_cube_net(self):
+
+        cube_layout = QtWidgets.QGridLayout()
+        cube_layout.setSpacing(0)
+
+        cube_layout.setContentsMargins(0, 0, 0, 0)
+        cube_layout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
+
+        faces = {
+            "U" : (0,1),
+            "L" : (1,0), 
+            "F" : (1,1), 
+            "R" : (1,2),
+            "B" : (1,3),
+            "D" : (2,1)
+        }
+
+        for i in range(12):
+            cube_layout.setColumnStretch(i, 0)
+
+        for i in range(9):
+            cube_layout.setRowStretch(i, 0)
+
+        for face, (face_row, face_col) in faces.items():
+
+            for row in range(3):
+                for col in range(3):
+
+                    number = row * 3 + col + 1
+                    sticker_key = f"{face}{number}"
+
+                    square = QtWidgets.QLabel()
+                    square.setAlignment(QtCore.Qt.AlignCenter)
+                    square.setFixedSize(35, 35)
+
+                    square.setStyleSheet(
+                        "background-color: white;"
+                        "border: 0px;"
+                    )
+
+                    cube_layout.addWidget(
+                        square,
+                        face_row * 3 + row,
+                        face_col * 3 + col
+                    )
+
+                    self.sticker_widgets[sticker_key] = square
+
+        cube_layout.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+
+        return cube_layout
+
 
     @QtCore.Slot()
 
@@ -296,6 +377,8 @@ class MyWidget(QtWidgets.QWidget):
         cube_functions.reset()
         print(cube_functions.cube)
         self.scramble_text.setText("")
+
+        self.update_cube_display()
         
 
     def magic(self):
@@ -311,6 +394,8 @@ class MyWidget(QtWidgets.QWidget):
         #print(cube.corners["URF"])
         #print(cube.edges["UF"])
         self.scramble_text.setText(f"{' '.join(scramble_list)}")
+
+        self.update_cube_display()  
 
 
 if __name__ == "__main__":
