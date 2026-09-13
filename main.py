@@ -3,17 +3,6 @@ from PySide6 import QtCore, QtWidgets, QtGui
 import sys
 import cube_functions
 
-#tests to see if cycles work on specific slots   
-
-
-"""
-for n in range(4): 
-    cube_functions.move_U()
-    print(cube.corners["URF"])
-    print(cube.edges["UF"])
-    n = n+1
-"""
-
 move_notation = {
     cube_functions.move_U : "U", cube_functions.move_U_prime : "U'",
     cube_functions.move_D : "D", cube_functions.move_D_prime : "D'",
@@ -55,13 +44,13 @@ def apply_moves_to_cube(scramble_list):
 corner_stickers = {
     "URF": ["U9", "R1", "F3"],
     "ULF": ["U7", "L3", "F1"],
-    "URB": ["U3", "R3", "B1"],
-    "ULB": ["U1", "L1", "B3"],
+    "URB": ["U3", "R3", "B3"],
+    "ULB": ["U1", "L1", "B1"],
 
     "DRF": ["D3", "R7", "F9"],
     "DLF": ["D1", "L9", "F7"],
-    "DRB": ["D9", "R9", "B7"],
-    "DLB": ["D7", "L7", "B9"],
+    "DRB": ["D9", "R9", "B9"],
+    "DLB": ["D7", "L7", "B7"],
 }
 
 edge_stickers = {
@@ -166,38 +155,26 @@ def colour_assignment(peice_for_assignment):
 
         corner = cube_functions.cube.corners[peice_for_assignment]
 
-        orientation = corner.orientation
-
-        colour1, colour2, colour3 = corner.identity
-
-        if orientation == 1:
-            colour1, colour2, colour3 = colour2, colour3, colour1
-
-        elif orientation == 2:
-            colour1, colour2, colour3 = colour3, colour1, colour2
-
-        positions = corner_stickers[peice_for_assignment]
-
-        stickers[positions[0]] = colour1
-        stickers[positions[1]] = colour2
-        stickers[positions[2]] = colour3
+        for face, colour in corner.face_colours.items():
+            sticker_key = next(
+                position
+                for position in corner_stickers[peice_for_assignment]
+                if position[0] == face
+            )
+            stickers[sticker_key] = colour
     
     #checks dicitonary
     elif peice_for_assignment in edge_stickers:
 
         edge = cube_functions.cube.edges[peice_for_assignment]
 
-        orientation = edge.orientation
-
-        colour1, colour2 = edge.identity
-
-        if orientation == 1:
-            colour1, colour2 = colour2, colour1
-
-        positions = edge_stickers[peice_for_assignment]
-        
-        stickers[positions[0]] = colour1
-        stickers[positions[1]] = colour2
+        for face, colour in edge.face_colours.items():
+            sticker_key = next(
+                position
+                for position in edge_stickers[peice_for_assignment]
+                if position[0] == face
+            )
+            stickers[sticker_key] = colour
 
     else:
 
@@ -243,35 +220,6 @@ def update_sticker(sticker_key, square):
 
     elif colour == "B":
         square.setStyleSheet("background-color: blue;")
-
-
-#will work on cube net later, dont understand and ai confused me with it
-"""
-class CubeNet(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-
-        layout = QtWidgets.QGridLayout(self)
-
-        # Create the 54 squares
-        self.stickers = {}
-
-        faces = ["U", "L", "F", "R", "B", "D"]
-
-        for face in faces:
-            for number in range(1, 10):
-                key = f"{face}{number}"
-
-                square = QtWidgets.QLabel()
-                square.setFixedSize(50, 50)
-                square.setStyleSheet(
-                    "background-color: white; border: 1px solid black;"
-                )
-
-                self.stickers[key] = square
-"""
-
-
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -386,6 +334,18 @@ class MyWidget(QtWidgets.QWidget):
         
         elif event.key() == QtCore.Qt.Key_D:
             cube_functions.move_D()
+
+        elif event.key() == QtCore.Qt.Key_R:
+            cube_functions.move_R()
+
+        elif event.key() == QtCore.Qt.Key_L:
+                    cube_functions.move_L()
+
+        elif event.key() == QtCore.Qt.Key_F:
+                    cube_functions.move_F()
+
+        elif event.key() == QtCore.Qt.Key_B:
+                    cube_functions.move_B()
         
         self.update_cube_display()
 
