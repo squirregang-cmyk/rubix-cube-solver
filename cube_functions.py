@@ -98,6 +98,28 @@ def reset():
     global cube
     cube = copy.deepcopy(solved_cube)
 
+def is_solved():
+    for position in cube.corners:
+        if cube.corners[position].identity != solved_cube.corners[position].identity:
+            return False
+
+        if cube.corners[position].orientation != solved_cube.corners[position].orientation:
+            return False
+
+    for position in cube.edges:
+        if cube.edges[position].identity != solved_cube.edges[position].identity:
+            return False
+
+        if cube.edges[position].orientation != solved_cube.edges[position].orientation:
+            return False
+
+    for position in cube.centres:
+        if cube.centres[position].identity != solved_cube.centres[position].identity:
+            return False
+
+    return True
+
+
 
 # Define a function to cycle the corners on the R face
 
@@ -130,10 +152,10 @@ def corner_cycle_twist_counter_clockwise(corner1, corner2, corner3, corner4):
     corners[corner3] = corners[corner4]
     corners[corner4] = temporary_corner
 
-    corners[corner1].orientation = (corners[corner1].orientation +2) % 3
-    corners[corner2].orientation = (corners[corner2].orientation +1) % 3
-    corners[corner3].orientation = (corners[corner3].orientation +2) % 3
-    corners[corner4].orientation = (corners[corner4].orientation +1) % 3
+    corners[corner1].orientation = (corners[corner1].orientation +1) % 3
+    corners[corner2].orientation = (corners[corner2].orientation +2) % 3
+    corners[corner3].orientation = (corners[corner3].orientation +1) % 3
+    corners[corner4].orientation = (corners[corner4].orientation +2) % 3
 
 
 def corner_cycle_U():
@@ -313,7 +335,7 @@ def move_D():
 
     
 def move_D_prime():
-    corner_cycle_no_twist("DRF", "DRB", "DLB", "DLF")
+    corner_cycle_no_twist("DRF", "DLF", "DLB", "DRB")
     edge_cycle_no_twist("DF", "DL", "DB", "DR")
 
     
@@ -355,3 +377,11 @@ def move_B():
 def move_B_prime():
     corner_cycle_twist_counter_clockwise("URB", "ULB", "DLB", "DRB")
     edge_cycle_twist_counter_clockwise("UB", "BR", "DB", "BL")
+
+
+move_R()
+move_U()
+move_R_prime()
+move_U_prime()
+
+print(cube)

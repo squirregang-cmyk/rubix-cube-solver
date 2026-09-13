@@ -380,6 +380,15 @@ class MyWidget(QtWidgets.QWidget):
 
         self.update_cube_display()
         
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_U:
+            cube_functions.move_U()
+        
+        elif event.key() == QtCore.Qt.Key_D:
+            cube_functions.move_D()
+        
+        self.update_cube_display()
+
 
     def magic(self):
         #self.text.setText(random.choice(self.hello))
