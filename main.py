@@ -375,3 +375,5 @@ if __name__ == "__main__":
     widget.show()
 
     sys.exit(app.exec())
+
+#moving onto 3d display, gonna try to use previous logic otherwise it may be difficult, first going to try and make it without animations and then add animations
